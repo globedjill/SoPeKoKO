@@ -2,12 +2,16 @@
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+
+const chemin = require('path');
+const app = express();
+
 const sauceRoute = require('./routes/sauce');
 const userRoute = require('./routes/routeUser');
 
-const app = express();
-
-mongoose.connect('mongodb+srv://globedjill24:Evan25082010@cluster0.tkyck.mongodb.net/<dbname>?retryWrites=true&w=majority',
+require('dotenv').config()
+console.log(process.env.DB_NAME)
+mongoose.connect('mongodb+srv://' + process.env.DB_NAME + ":" + process.env.DB_PASS  + '@cluster0.tkyck.mongodb.net/<dbname>?retryWrites=true&w=majority',
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -16,7 +20,8 @@ mongoose.connect('mongodb+srv://globedjill24:Evan25082010@cluster0.tkyck.mongodb
     .catch(() => console.log('Connexion a MongoDB échouée'));
 
 
-//Ecoute des reponse du serveur avec l'entete
+
+/*Ecoute des reponse du serveur avec l'entete*/
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content,Accept,Content-Type,Authorization');
@@ -26,8 +31,9 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use('./api/sauces', sauceRoute);
-app.use('./api/auth', userRoute);
+app.use('/images', express.static(chemin.join(__dirname, 'images')));
+app.use('/api/sauces', sauceRoute);
+app.use('/api/auth', userRoute);
 
 
 module.exports = app;

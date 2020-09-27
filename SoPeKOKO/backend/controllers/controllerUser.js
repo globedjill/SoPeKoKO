@@ -1,6 +1,6 @@
 ﻿const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../routes/routeUser');
+const User = require('../models/user');
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
@@ -32,7 +32,7 @@ exports.login = (req, res, next) => {
                         token: jwt.sign(
                             { userId: user._id },
                             'RAMDOM_TOKEN_SECRET',
-                            { expireIn : '24h'}
+                            { expiresIn : '24h'}
                         )
                     });
                 })
